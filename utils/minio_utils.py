@@ -21,13 +21,13 @@ def initialize_minio_client(config: Dict[str, Any]) -> None:
             )
             # 尝试列出桶以验证连接
             _minio_client_instance.list_buckets()
-            logger.info(f"MinIO 客户端初始化成功，连接到 {config['endpoint']}")
+            logger.info(f"MinIO 客户端初始化成功")
         except S3Error as e:
             logger.error(f"MinIO S3 错误: {e}")
             _minio_client_instance = None
         except InvalidResponseError as e:
             logger.error(f"初始化 MinIO 客户端时发生无效响应错误: {e}")
-            logger.error("请检查 MinIO endpoint 端口是否正确 (通常API端口是9000，而非9001)。")
+            logger.error("请检查 MinIO endpoint 端口是否正确。")
             _minio_client_instance = None
         except Exception as e:
             logger.error(f"初始化 MinIO 客户端时发生意外错误: {e}", exc_info=True)
