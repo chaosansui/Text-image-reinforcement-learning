@@ -6,7 +6,7 @@ import logging
 from datetime import datetime, timedelta
 from typing import List
 
-logger = logging.getLogger(__name__) # 获取与模块同名的logger，或者直接用root logger
+logger = logging.getLogger(__name__)
 
 def fetch_data_from_db(
     host: str,
@@ -18,22 +18,19 @@ def fetch_data_from_db(
     fields: List[str],
     days: int = 30
 ) -> pd.DataFrame:
-    """
-    从数据库获取最近N天的数据。
-    确保返回的DataFrame包含所有指定字段，特别是'prompt', 'result_info', 'create_time'。
-    """
+
     try:
         engine = create_engine(f"mysql+pymysql://{user}:{password}@{host}:{port}/{database}")
 
-        # 确保包含必要的字段，因为这些字段在质量分流逻辑中被用到
+        
         required_for_quality_logic = ["prompt", "result_info", "create_time", "stay_time", "is_quality", "branch"]
         for field in required_for_quality_logic:
             if field not in fields:
                 fields.append(field)
 
-        # 获取最近数据
+ 
         recent_date = (datetime.now() - timedelta(days=days)).strftime('%Y-%m-%d')
-        # 你的 SQL 查询逻辑，确保过滤掉空值
+  
         query = f"""
         SELECT {', '.join(fields)}
         FROM {table_name}
